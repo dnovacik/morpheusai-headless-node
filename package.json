@@ -1,0 +1,55 @@
+{
+  "name": "morpheusai-headless-node",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs",
+  "type": "module",
+  "bin": {
+    "morpheus-node": "./dist/index.cjs"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "cross-env MODE=development esrun ./src/index.ts",
+    "copy": "cpy ./executables/* ./dist",
+    "copy-fonts": "cpy node_modules/figlet/fonts/* ./dist/fonts",
+    "build-win2": "ncc build ./src/index.ts -o ./dist && nexe ./dist/index.js -r ./executables/ollama.exe --target=win32-x64-v20.9.0 --name=morpheus-node-windows --build",
+    "build-win": "ncc build ./src/index.ts -o ./dist && nexe ./dist/index.cjs -r ./executables/ollama.exe --target=win32-x64-v20.9.0 --name=morpheus-node-windows --build",
+    "build-macos": "yarn run copy && ncc build ./src/index.ts -o ./dist && nexe ./dist/index.js -r ./executables/ollama-darwin --target=darwin-x64-v20.9.0 --name=morpheus-node-macos --build --verbose",
+    "build-linux": "yarn run copy && ncc build ./src/index.ts -o ./dist && nexe ./dist/index.js -r ./executables/ollama-linux --target=linux-x64-v20.9.0 --name=morpheus-node-linux --build --verbose",
+    "build-e": "esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build --targets latest-linux,latest-mac,latest-win --compress GZip --verbose",
+    "build-e2": "ncc build ./src/index.ts -o ./dist && pkg ./dist/index.js --targets=node18-win-x64",
+    "build-e-win": "cpy ./executables/ollama.exe ./build/win && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/win --targets latest-win --compress GZip --verbose",
+    "build-e-linux": "cpy ./executables/ollama-linux ./build/linux && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/linux --targets latest-linux --compress GZip --verbose",
+    "build-e-mac": "cpy ./executables/ollama-darwin ./build/darwin && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/darwin --targets latest-mac --compress GZip --verbose"
+  },
+  "devDependencies": {
+    "@types/boxen": "^3.0.1",
+    "@types/chalk": "^2.2.0",
+    "@types/figlet": "^1.5.8",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.11.19",
+    "@types/qrcode": "^1.5.5",
+    "@types/qrcode-terminal": "^0.12.2",
+    "@types/yargs": "^17.0.32",
+    "cpy-cli": "^5.0.0",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^4.1.0",
+    "@inquirer/select": "^2.0.0",
+    "@metamask/sdk": "^0.15.0",
+    "boxen": "^7.1.1",
+    "chalk": "^5.3.0",
+    "cli-spinners": "^2.9.2",
+    "colorette": "^2.0.20",
+    "esrun": "^3.2.26",
+    "figlet": "^1.7.0",
+    "inquirer": "^9.2.15",
+    "ollama": "^0.4.6",
+    "ora": "^8.0.1",
+    "qrcode": "^1.5.3",
+    "qrcode-terminal": "^0.12.0",
+    "winston": "^3.11.0",
+    "yargs": "^17.7.2"
+  }
+}
