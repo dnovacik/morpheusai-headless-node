@@ -4,7 +4,7 @@ export type MainMenuSelection = 'metamask' | 'chat' | 'wallet';
 export const WALLET_SELECT_CONFIG = {
 
 };
-export type EthereumChain = 'ethereum' | 'arbitrum' | 'sepolia' | 'holesky';
+export type EthereumChain = 'ethereum' | 'arbitrum' | 'sepolia';
 export const isDev = process.env.MODE === 'development';
 export const appDataPathPlatform = process.env.APPDATA
   ? `${process.env.APPDATA}/Morpheus`

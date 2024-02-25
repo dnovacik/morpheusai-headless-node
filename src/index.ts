@@ -63,10 +63,6 @@ const walletChainMenu = async () => {
         name: 'Sepolia Ethereum Test Net',
         value: 'sepolia'
       },
-      {
-        name: 'Holesky',
-        value: 'holesky'
-      }
     ]
   }) as EthereumChain;
 
@@ -74,7 +70,6 @@ const walletChainMenu = async () => {
     case 'ethereum':
     case 'arbitrum':
     case 'sepolia':
-    case 'holesky':
       const switched = await changeChain(selection);
 
       if (switched) {

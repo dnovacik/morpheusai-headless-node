@@ -92,7 +92,5 @@ const getChainId = (chain: EthereumChain) => {
       return '0xa4b1';
     case 'sepolia':
       return '0xaa36a7';
-    case 'holesky':
-      return '0x4268';
   }
 }
