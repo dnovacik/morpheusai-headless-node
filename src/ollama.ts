@@ -203,11 +203,11 @@ export const getExecutablePathByPlatform = () => {
         : path.join('executables', 'ollama.exe');
     case 'darwin':
       return isDev
-        ? path.join(__dirname, 'executables', 'ollama-darwin')
+        ? path.resolve(__dirname, 'executables', 'ollama-darwin')
         : path.join('executables', 'ollama-darwin');
     case 'linux':
       return isDev
-        ? path.join(__dirname, 'executables', 'ollama-linux')
+        ? path.resolve(__dirname, 'executables', 'ollama-linux')
         : path.join('executables', 'ollama-linux');
     default:
       throw new Error(`Unsupported platform detected: ${process.platform}`);
