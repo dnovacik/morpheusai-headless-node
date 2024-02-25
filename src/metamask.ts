@@ -1,13 +1,15 @@
-import { MetaMaskSDK, MetaMaskSDKOptions, SDKProvider } from '@metamask/sdk';
-import { red } from 'colorette';
+import { MetaMaskSDK, MetaMaskSDKOptions } from '@metamask/sdk';
 import qrcode from 'qrcode';
+import { EthereumChain, LOGO_METAMASK_BASE64, Transaction } from './constants';
 
 export let sdk: MetaMaskSDK;
 
 const options: MetaMaskSDKOptions = {
   shouldShimWeb3: false,
   dappMetadata: {
-    name: 'Morpheus Node'
+    name: 'Morpheus Node',
+    url: 'https://mor.org',
+    base64Icon: LOGO_METAMASK_BASE64,
   },
   useDeeplink: true,
   communicationServerUrl: 'https://metamask-sdk-socket.metafi.codefi.network/',
@@ -51,20 +53,46 @@ export const initMetaMask = async () => {
   return await sdk.init();
 };
 
-export const connect = async (retry: boolean = false) => {
+export const connect = async () => {
   sdk.terminate();
 
-  let accounts: Array<string>;
+  try {
+    return await sdk.connect() as Array<string>;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const changeChain = async (chain: EthereumChain) => {
+  const provider = sdk.getProvider();
+
+  const chainId = getChainId(chain);
 
   try {
-    accounts = await sdk.connect() as Array<string>;
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: chainId }]
+    });
 
-    return accounts;
+    return true;
   } catch (err) {
-    if (retry) {
-      console.log(red(`Connection to MetaMask couldn't be established, check your internet connection and try to re-run the application.`));
-    }
+    return false;
+  }
+};
 
-    throw err;
+export const sendTx = async (toAddress: string, amount: string) => {
+  // build the tx and send request
+};
+
+const getChainId = (chain: EthereumChain) => {
+  switch (chain) {
+    case 'ethereum':
+      return '0x1';
+    case 'arbitrum':
+      return '0xa4b1';
+    case 'sepolia':
+      return '0xaa36a7';
+    case 'holesky':
+      return '0x4268';
   }
 }

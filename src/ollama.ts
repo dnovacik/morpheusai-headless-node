@@ -3,17 +3,15 @@ import { execFile, ChildProcess, exec } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // helpers
 import { MOR_PROMPT } from './prompts'
 import { logger } from './logger';
 import { appDataPathPlatform, isDev } from './constants';
+import { updateOllamaLoader } from '.';
 
 // constants
 const DEFAULT_OLLAMA_URL = 'http://127.0.0.1:11434/';
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
 // commands
 export const SERVE_OLLAMA_CMD = 'ollama serve';
@@ -32,6 +30,8 @@ export const initOllama = async () => {
       host: DEFAULT_OLLAMA_URL,
     });
 
+    updateOllamaLoader(`local instance of ollama is running and connected at ${DEFAULT_OLLAMA_URL}`);
+
     return true;
   }
 
@@ -43,6 +43,8 @@ export const initOllama = async () => {
       host: DEFAULT_OLLAMA_URL,
     });
 
+    updateOllamaLoader(`local instance of ollama is running and connected at ${DEFAULT_OLLAMA_URL}`);
+
     return true;
   }
 
@@ -53,6 +55,8 @@ export const isOllamaInstanceRunning = async (url?: string): Promise<boolean> =>
   try {
     const usedUrl = url ?? DEFAULT_OLLAMA_URL;
 
+    updateOllamaLoader(`checking if ollama instance is running at ${usedUrl}`);
+
     const ping = await fetch(usedUrl);
 
     return ping.status === 200;
@@ -62,6 +66,8 @@ export const isOllamaInstanceRunning = async (url?: string): Promise<boolean> =>
 };
 
 export const packedExecutableOllamaSpawn = async (customDataPath?: string) => {
+  updateOllamaLoader(`trying to spawn locally installed ollama`);
+
   try {
     spawnLocalExecutable(customDataPath);
   } catch (err) {
@@ -128,8 +134,7 @@ export const askOllama = async (model: string, message: string) => {
 export const getOrPullModel = async (model: string) => {
   await installModelWithStatus(model);
 
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
+  updateOllamaLoader('', true);
 
   return findModel(model);
 };
@@ -147,14 +152,10 @@ export const installModelWithStatus = async (model: string) => {
       if (part.completed && part.total) {
         percent = Math.round((part.completed / part.total) * 100);
 
-        process.stdout.clearLine(0);
-        process.stdout.cursorTo(0);
-        process.stdout.write(`${part.status} ${percent}%...`);
+        updateOllamaLoader(`${part.status} ${percent}%`);
       }
     } else {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write(`${part.status}`);
+      updateOllamaLoader(`${part.status}`);
     }
   }
 };
@@ -211,4 +212,4 @@ export const getExecutablePathByPlatform = () => {
     default:
       throw new Error(`Unsupported platform detected: ${process.platform}`);
   }
-}
+};
