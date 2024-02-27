@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    name: Release for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: morpheus-headless-node_${{ github.ref }}_linux.tar
+            asset_name: morpheus-headless-linux-amd64
+          - os: windows-latest
+            artifact_name: morpheus-headless-node_${{ github.ref }}_win.zip
+            asset_name: morpheus-headless-windows-amd64
+          - os: macos-latest
+            artifact_name: morpheus-headless-node_${{ github.ref }}_mac.zip
+            asset_name: morpheus-headless-macos-amd64
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@master
+        with:
+          node-version: 18
+      - name: install dependencies
+        run: npm install
+      - name: build
+        run: npm run build
+      - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.asset_name }}
+        tag: ${{ github.ref }}
