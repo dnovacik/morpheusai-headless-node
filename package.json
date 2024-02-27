@@ -9,10 +9,10 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env MODE=development esrun ./src/index.ts",
-    "build": "yarn run build-e-win && yarn run build-e-linux && yarn run build-e-mac",
-    "build-e-win": "cpy ./executables/ollama.exe ./build/win && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/win --targets latest-win --compress GZip --verbose",
-    "build-e-linux": "cpy ./executables/ollama-linux ./build/linux && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/linux --targets latest-linux --compress GZip --verbose",
-    "build-e-mac": "cpy ./executables/ollama-darwin ./build/darwin && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/index.cjs --platform=node && pkg ./dist/index.cjs --out-path=./build/darwin --targets latest-mac --compress GZip --verbose"
+    "build": "yarn run build-win && yarn run build-linux && yarn run build-mac",
+    "build-win": "cpy ./executables/ollama.exe ./build/win && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/win --targets latest-win --compress GZip --verbose",
+    "build-linux": "cpy ./executables/ollama-linux ./build/linux && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/linux --targets latest-linux --compress GZip --verbose",
+    "build-mac": "cpy ./executables/ollama-darwin ./build/darwin && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/darwin --targets latest-mac --compress GZip --verbose"
   },
   "devDependencies": {
     "@types/boxen": "^3.0.1",
