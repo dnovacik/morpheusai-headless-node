@@ -10,9 +10,9 @@
   "scripts": {
     "start": "cross-env MODE=development esrun ./src/index.ts",
     "build": "yarn run build-win && yarn run build-linux && yarn run build-mac",
-    "build-win": "cpy ./executables/ollama.exe ./build/win && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/win --targets latest-win --compress GZip --verbose && zip-build ./build/win ./build --template=%NAME%_%VERSION%_win.%EXT% --format=zip",
-    "build-linux": "cpy ./executables/ollama-linux ./build/linux && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/linux --targets latest-linux --compress GZip --verbose && zip-build ./build/linux ./build --template=%NAME%_%VERSION%_linux.%EXT% --format=tar",
-    "build-mac": "cpy ./executables/ollama-darwin ./build/darwin && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/darwin --targets latest-mac --compress GZip --verbose && zip-build ./build/darwin ./build --template=%NAME%_%VERSION%_mac.%EXT% --format=zip"
+    "build-win": "cpy ./executables/ollama.exe ./build/win && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/win --targets latest-win --compress GZip --verbose && zip-build ./build/win ./build --template=%NAME%_v%VERSION%_win.%EXT% --format=zip",
+    "build-linux": "cpy ./executables/ollama-linux ./build/linux && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/linux --targets latest-linux --compress GZip --verbose && zip-build ./build/linux ./build --template=%NAME%_v%VERSION%_linux.%EXT% --format=tar",
+    "build-mac": "cpy ./executables/ollama-darwin ./build/darwin && esbuild ./src/index.ts --bundle --target=node18 --outfile=./dist/morpheus.cjs --platform=node && pkg ./dist/morpheus.cjs --out-path=./build/darwin --targets latest-mac --compress GZip --verbose && zip-build ./build/darwin ./build --template=%NAME%_v%VERSION%_mac.%EXT% --format=zip"
   },
   "devDependencies": {
     "@types/boxen": "^3.0.1",

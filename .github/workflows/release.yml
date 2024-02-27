@@ -34,4 +34,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
+          draft: true
+          overwrite: true
           tag: ${{ github.ref }}
