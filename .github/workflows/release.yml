@@ -1,23 +1,32 @@
 name: Release
-'on':
+on:
   push:
     tags:
       - '*'
 jobs:
+  set_version_tag:
+    runs-on: ubuntu-latest
+    name: 'Set the correct version from tag'
+    outputs:
+      VERSION_TAG: ${{ steps.set-tag.outputs.VERSION_TAG }}
+    steps:
+      - id: set-tag
+        run: echo ${{ github.ref_name }} >> "$GITHUB_OUTPUT"
   publish:
     name: 'Release for ${{ matrix.os }}'
+    needs: set_version_tag
     runs-on: '${{ matrix.os }}'
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_linux.tar'
+            artifact_name: 'morpheus-headless-node_${{ needs.set_version_tag.outputs.VERSION_TAG }}_linux.tar'
             asset_name: morpheus-headless-linux-amd64
           - os: windows-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_win.zip'
+            artifact_name: 'morpheus-headless-node_${{ needs.set_version_tag.outputs.VERSION_TAG }}_win.zip'
             asset_name: morpheus-headless-windows-amd64
           - os: macos-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_mac.zip'
+            artifact_name: 'morpheus-headless-node_${{ needs.set_version_tag.outputs.VERSION_TAG }}_mac.zip'
             asset_name: morpheus-headless-macos-amd64
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +40,7 @@ jobs:
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: '${{ secrets.GITHUB_TOKEN }}'
-          file: 'target/release/${{ matrix.artifact_name }}'
-          asset_name: '${{ matrix.asset_name }}'
-          tag: '${{ github.ref }}'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref_name }}
