@@ -1,0 +1,41 @@
+name: Publish
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - 'release-*'
+jobs:
+  publish:
+    name: 'Publish for all platforms'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@master
+        with:
+          node-version: 18
+      - name: install dependecies
+        run: npm install
+      - name: build
+        run: npm run build
+      - name: Upload mac binary to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/morpheus-headless-node_${{ github.ref }}_mac.zip
+          draft: true
+          tag: ${{ github.ref }}
+      - name: Upload linux binary to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/morpheus-headless-node_${{ github.ref }}_linux.tar
+          draft: true
+          tag: ${{ github.ref }}
+      - name: Upload win binary to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/morpheus-headless-node_${{ github.ref }}_win.zip
+          draft: true
+          tag: ${{ github.ref }}
