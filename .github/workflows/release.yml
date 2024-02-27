@@ -11,13 +11,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_linux.tar'
+            artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_linux.tar'
             asset_name: morpheus-headless-linux-amd64
           - os: windows-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_win.zip'
+            artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_win.zip'
             asset_name: morpheus-headless-windows-amd64
           - os: macos-latest
-            artifact_name: 'morpheus-headless-node_${{ github.ref }}_mac.zip'
+            artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_mac.zip'
             asset_name: morpheus-headless-macos-amd64
     steps:
       - uses: actions/checkout@v4
