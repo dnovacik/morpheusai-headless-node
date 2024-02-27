@@ -4,6 +4,18 @@ on:
     tags:
       - '*'
 jobs:
+  build:
+    name: 'Build for all platforms'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@master
+        with:
+          node-version: 18
+      - name: install dependecies
+        run: npm install
+      - name: build
+        run: npm run build
   publish:
     name: 'Release for ${{ matrix.os }}'
     runs-on: '${{ matrix.os }}'
@@ -12,22 +24,14 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_linux.tar'
-            asset_name: morpheus-headless-linux-amd64
+            asset_name: morpheus-headless-linux-amd64.tar
           - os: windows-latest
             artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_win.zip'
-            asset_name: morpheus-headless-windows-amd64
+            asset_name: morpheus-headless-windows-amd64.zip
           - os: macos-latest
             artifact_name: 'morpheus-headless-node_${{ github.ref_name }}_mac.zip'
-            asset_name: morpheus-headless-macos-amd64
+            asset_name: morpheus-headless-macos-amd64.zip
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@master
-        with:
-          node-version: 18
-      - name: install dependencies
-        run: npm install
-      - name: build
-        run: npm run build
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -35,5 +39,4 @@ jobs:
           file: build/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           draft: true
-          overwrite: true
           tag: ${{ github.ref }}
